@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASANY | Future Hub</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-glow: #00d2ff;
+            --secondary-glow: #9d00ff;
+            --bg-color: #020202;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* إخفاء الماوس العادي لاستخدام المخصص */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* مؤشر ماوس مخصص */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-glow);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+
+        /* خلفية الجزيئات */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* تأثير أضواء الفضاء (Aurora) */
+        .aurora {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05), transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(157, 0, 255, 0.05), transparent 50%);
+            z-index: 1;
+            filter: blur(80px);
+        }
+
+        /* المحتوى */
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* تأثير Glitch للكلمة */
+        .main-title {
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 900;
+            text-transform: lowercase;
+            position: relative;
+            color: #fff;
+            animation: glitch 1s linear infinite;
+        }
+
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px, 0) skew(0deg); }
+            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+            62% { transform: translate(0, 0) skew(5deg); }
+        }
+
+        .main-title::before, .main-title::after {
+            content: 'hasany';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .main-title::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .main-title::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            100% { clip: rect(70px, 9999px, 71px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            100% { clip: rect(10px, 9999px, 40px, 0); }
+        }
+
+        .sub-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        /* أزرار النيون المخصصة */
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .btn {
+            padding: 12px 35px;
+            border: 1px solid var(--primary-glow);
+            background: transparent;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            text-decoration: none;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+            pointer-events: auto; /* مهم للتفاعل مع الماوس */
+        }
+
+        .btn:hover {
+            background: var(--primary-glow);
+            box-shadow: 0 0 20px var(--primary-glow);
+            color: black;
+            font-weight: bold;
+        }
+
+        /* خطوط المسح (Scanline Effect) */
+        body::after {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+    <div class="aurora"></div>
+    <div id="particles-js"></div>
+
+    <div class="content">
+        <h1 class="main-title">hasany</h1>
+        <p class="sub-text">Architect of the Digital Future</p>
+        
+        <div class="btn-container">
+            <a href="#" class="btn">المتجر</a>
+            <a href="#" class="btn">دوري الأبطال</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // مؤشر الماوس المخصص
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // إعدادات الجزيئات (Particles)
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 120, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.3, "random": true },
+                "size": { "value": 2, "random": true },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#00d2ff",
+                    "opacity": 0.2,
+                    "width": 1
+                },
+                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "push" }
+                },
+                "modes": { "grab": { "distance": 200, "line_linked": { "opacity": 0.8 } } }
+            }
+        });
+    </script>
+</body>
+</html>
