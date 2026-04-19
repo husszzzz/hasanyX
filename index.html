@@ -3,224 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HASANY | Future Hub</title>
+    <title>HASANY | OS TERMINAL</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
+        /* =========================================
+           1. الإعدادات العامة والمتغيرات
+        ========================================= */
         :root {
-            --primary-glow: #00d2ff;
-            --secondary-glow: #9d00ff;
-            --bg-color: #020202;
+            --cyan: #00f3ff;
+            --purple: #bc13fe;
+            --dark: #050505;
+            --hud-color: rgba(0, 243, 255, 0.3);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* إخفاء الماوس العادي لاستخدام المخصص */
+            user-select: none;
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-        }
-
-        /* مؤشر ماوس مخصص */
-        #cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--primary-glow);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s;
-        }
-
-        /* خلفية الجزيئات */
-        #particles-js {
-            position: absolute;
+        body, html {
             width: 100%;
             height: 100%;
-            z-index: 1;
+            background-color: var(--dark);
+            overflow: hidden;
+            font-family: 'Orbitron', 'Cairo', sans-serif;
+            color: #fff;
         }
 
-        /* تأثير أضواء الفضاء (Aurora) */
-        .aurora {
-            position: absolute;
+        /* =========================================
+           2. شاشة الدخول السينمائية (Intro)
+        ========================================= */
+        #intro-screen {
+            position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05), transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(157, 0, 255, 0.05), transparent 50%);
-            z-index: 1;
-            filter: blur(80px);
-        }
-
-        /* المحتوى */
-        .content {
-            position: relative;
-            z-index: 2;
-            height: 100vh;
+            background: #000;
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            transition: opacity 1.5s ease-in-out, visibility 1.5s;
         }
 
-        /* تأثير Glitch للكلمة */
-        .main-title {
-            font-size: clamp(4rem, 12vw, 8rem);
-            font-weight: 900;
-            text-transform: lowercase;
-            position: relative;
-            color: #fff;
-            animation: glitch 1s linear infinite;
-        }
-
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px, 0) skew(0deg); }
-            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
-            62% { transform: translate(0, 0) skew(5deg); }
-        }
-
-        .main-title::before, .main-title::after {
-            content: 'hasany';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-        }
-
-        .main-title::before {
-            left: 2px;
-            text-shadow: -2px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-
-        .main-title::after {
-            left: -2px;
-            text-shadow: -2px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch-anim {
-            0% { clip: rect(31px, 9999px, 94px, 0); }
-            100% { clip: rect(70px, 9999px, 71px, 0); }
-        }
-
-        @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); }
-            100% { clip: rect(10px, 9999px, 40px, 0); }
-        }
-
-        .sub-text {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.2rem;
-            color: #aaa;
-            margin-bottom: 30px;
+        .boot-text {
+            color: var(--cyan);
+            font-size: 1.5rem;
             letter-spacing: 5px;
             text-transform: uppercase;
-        }
-
-        /* أزرار النيون المخصصة */
-        .btn-container {
-            display: flex;
-            gap: 20px;
-            z-index: 10;
-        }
-
-        .btn {
-            padding: 12px 35px;
-            border: 1px solid var(--primary-glow);
-            background: transparent;
-            color: white;
-            font-family: 'Cairo', sans-serif;
-            text-decoration: none;
-            border-radius: 5px;
-            position: relative;
+            text-shadow: 0 0 10px var(--cyan);
+            border-right: 2px solid var(--cyan);
+            white-space: nowrap;
             overflow: hidden;
-            transition: 0.4s;
-            pointer-events: auto; /* مهم للتفاعل مع الماوس */
+            width: 0;
+            animation: typing 3s steps(30, end) forwards, blink-caret 0.5s step-end infinite;
         }
 
-        .btn:hover {
-            background: var(--primary-glow);
-            box-shadow: 0 0 20px var(--primary-glow);
-            color: black;
-            font-weight: bold;
+        .progress-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s 3.5s forwards;
         }
 
-        /* خطوط المسح (Scanline Effect) */
-        body::after {
-            content: " ";
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--purple);
+            box-shadow: 0 0 15px var(--purple);
+            animation: loadProgress 2s 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* =========================================
+           3. الكانفاس (محرك الجزيئات)
+        ========================================= */
+        #canvas {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            z-index: 5;
+            z-index: 1;
+        }
+
+        /* =========================================
+           4. الواجهة الرئيسية (HUD & UI)
+        ========================================= */
+        #main-ui {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; /* مخفي في البداية حتى ينتهي الانترو */
+            transform: scale(1.2);
+            transition: opacity 2s, transform 2s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none; /* للسماح للماوس بالتفاعل مع الكانفاس */
+        }
+
+        #main-ui.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* إطارات التصويب (Cyberpunk HUD) */
+        .hud-corner {
+            position: absolute;
+            width: 50px; height: 50px;
+            border: 2px solid var(--hud-color);
+            transition: 0.3s;
+        }
+        .hud-tl { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+        .hud-tr { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+        .hud-bl { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+        .hud-br { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+
+        /* =========================================
+           5. النص الرئيسي (HASANY)
+        ========================================= */
+        .title-container {
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .glitch-title {
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            position: relative;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
+            letter-spacing: 15px;
+            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.5));
+        }
+
+        .glitch-title::before, .glitch-title::after {
+            content: 'HASANY';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            color: var(--cyan);
+            -webkit-text-stroke: 0px;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        .glitch-title::before {
+            left: 4px;
+            text-shadow: -3px 0 var(--purple);
+            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+        }
+
+        .glitch-title::after {
+            left: -4px;
+            text-shadow: 3px 0 var(--cyan);
+            animation: glitch-anim-2 2s infinite linear alternate-reverse;
+        }
+
+        /* =========================================
+           6. زر "الحسني" الأسطوري
+        ========================================= */
+        .btn-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* حلقات متحركة خلف الزر */
+        .btn-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px dashed var(--cyan);
+            animation: spin 10s linear infinite;
             pointer-events: none;
+        }
+        .ring-1 { width: 220px; height: 220px; animation-duration: 15s; opacity: 0.3; }
+        .ring-2 { width: 250px; height: 250px; animation-duration: 25s; animation-direction: reverse; border: 1px solid var(--purple); opacity: 0.2; }
+
+        .tele-btn {
+            position: relative;
+            padding: 20px 60px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--cyan);
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            z-index: 2;
+        }
+
+        /* تأثير المسح الضوئي للزر */
+        .tele-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.8), transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .tele-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px var(--cyan), inset 0 0 30px var(--cyan);
+            border-color: #fff;
+            color: var(--dark);
+            text-shadow: none;
+            background: var(--cyan);
+        }
+
+        .tele-btn:hover::before {
+            left: 100%;
+            transition: all 0.5s;
+        }
+
+        /* =========================================
+           7. Keyframes & Animations
+        ========================================= */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--cyan); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 85px, 0); }
+            20% { clip: rect(50px, 9999px, 10px, 0); }
+            40% { clip: rect(10px, 9999px, 90px, 0); }
+            60% { clip: rect(80px, 9999px, 30px, 0); }
+            80% { clip: rect(100px, 9999px, 50px, 0); }
+            100% { clip: rect(30px, 9999px, 20px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(10px, 9999px, 30px, 0); }
+            20% { clip: rect(80px, 9999px, 50px, 0); }
+            40% { clip: rect(30px, 9999px, 10px, 0); }
+            60% { clip: rect(90px, 9999px, 80px, 0); }
+            80% { clip: rect(20px, 9999px, 100px, 0); }
+            100% { clip: rect(50px, 9999px, 60px, 0); }
+        }
+
+        /* شاشة الفلاش الأبيض عند الضغط */
+        #warp-flash {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #fff;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
         }
 
     </style>
 </head>
 <body>
 
-    <div id="cursor"></div>
-    <div class="aurora"></div>
-    <div id="particles-js"></div>
+    <div id="warp-flash"></div>
 
-    <div class="content">
-        <h1 class="main-title">hasany</h1>
-        <p class="sub-text">Architect of the Digital Future</p>
-        
-        <div class="btn-container">
-            <a href="#" class="btn">المتجر</a>
-            <a href="#" class="btn">دوري الأبطال</a>
+    <div id="intro-screen">
+        <div class="boot-text">INITIALIZING HASANY SYSTEM...</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <canvas id="canvas"></canvas>
+
+    <div id="main-ui">
+        <div class="hud-corner hud-tl"></div>
+        <div class="hud-corner hud-tr"></div>
+        <div class="hud-corner hud-bl"></div>
+        <div class="hud-corner hud-br"></div>
+
+        <div class="title-container">
+            <h1 class="glitch-title">HASANY</h1>
+        </div>
+
+        <div class="btn-wrapper">
+            <div class="btn-ring ring-1"></div>
+            <div class="btn-ring ring-2"></div>
+            <a href="#" id="tele-link" class="tele-btn">الحسني</a>
+        </div>
+    </div>
+
     <script>
-        // مؤشر الماوس المخصص
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const introScreen = document.getElementById('intro-screen');
+        const mainUI = document.getElementById('main-ui');
+        const teleBtn = document.getElementById('tele-link');
+        const warpFlash = document.getElementById('warp-flash');
+
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        let isWarping = false; // حالة السفر عبر الزمن
+        let warpSpeed = 0;
+
+        // إعداد حجم الشاشة
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // تتبع حركة الماوس
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
         });
 
-        // إعدادات الجزيئات (Particles)
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 120, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.3, "random": true },
-                "size": { "value": 2, "random": true },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#00d2ff",
-                    "opacity": 0.2,
-                    "width": 1
-                },
-                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "out_mode": "out" }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": { "enable": true, "mode": "grab" },
-                    "onclick": { "enable": true, "mode": "push" }
-                },
-                "modes": { "grab": { "distance": 200, "line_linked": { "opacity": 0.8 } } }
+        /* =========================================
+           كلاس الجزيئات (Particle System)
+        ========================================= */
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.color = Math.random() > 0.5 ? '#00f3ff' : '#bc13fe';
+                this.angle = Math.random() * 360; // للـ Warp effect
+                this.speed = Math.random() * 2 + 0.5;
             }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                // إذا تم الضغط على الزر (حالة السفر عبر الزمن)
+                if (isWarping) {
+                    let dx = this.x - width / 2;
+                    let dy = this.y - height / 2;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // تحرك الجزيئات نحو الخارج بسرعة مضاعفة
+                    this.x += (dx / distance) * warpSpeed * this.speed;
+                    this.y += (dy / distance) * warpSpeed * this.speed;
+                    
+                    // تطويل الجزيئات لتشبه النجوم السريعة
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x - (dx / distance) * warpSpeed * 2, this.y - (dy / distance) * warpSpeed * 2);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = this.size;
+                    ctx.stroke();
+                    
+                    return;
+                }
+
+                // التفاعل الطبيعي مع الماوس
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let forceDirectionX = dx / distance;
+                    let forceDirectionY = dy / distance;
+                    let maxDistance = mouse.radius;
+                    let force = (maxDistance - distance) / maxDistance;
+                    let directionX = forceDirectionX * force * this.density;
+                    let directionY = forceDirectionY * force * this.density;
+
+                    if (distance < mouse.radius) {
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    } else {
+                        if (this.x !== this.baseX) {
+                            let dx = this.x - this.baseX;
+                            this.x -= dx / 20;
+                        }
+                        if (this.y !== this.baseY) {
+                            let dy = this.y - this.baseY;
+                            this.y -= dy / 20;
+                        }
+                    }
+                }
+
+                // حركة طبيعية عائمة
+                this.y -= this.speed * 0.2;
+                if(this.y < 0) {
+                    this.y = height;
+                    this.x = Math.random() * width;
+                    this.baseX = this.x;
+                    this.baseY = this.y;
+                }
+
+                this.draw();
+            }
+        }
+
+        // إنشاء شبكة الجزيئات
+        function init() {
+            particles = [];
+            let numberOfParticles = (width * height) / 8000; // كثافة الجزيئات بناءً على الشاشة
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // رسم خطوط بين الجزيئات القريبة (Constellation Effect)
+        function connect() {
+            if(isWarping) return; // تعطيل الخطوط أثناء السفر
+            let opacityValue = 1;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
+                                 + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
+                    if (distance < (width/10) * (height/10)) {
+                        opacityValue = 1 - (distance / 10000);
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${opacityValue * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // دورة الانيميشن الرئيسية
+        function animate() {
+            // إضافة تأثير ذيل خفيف (Trail Effect)
+            if(isWarping) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // ذيل أطول أثناء السفر
+            } else {
+                ctx.fillStyle = 'rgba(5, 5, 5, 1)'; // مسح الشاشة
+            }
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+            }
+            connect();
+            requestAnimationFrame(animate);
+        }
+
+        /* =========================================
+           إدارة الأحداث (Events Manager)
+        ========================================= */
+        
+        // 1. تشغيل الانترو ثم كشف الموقع
+        window.onload = () => {
+            init();
+            animate();
+            
+            // بعد 5 ثواني (انتهاء شريط التحميل)
+            setTimeout(() => {
+                introScreen.style.opacity = '0';
+                introScreen.style.visibility = 'hidden';
+                mainUI.classList.add('active');
+            }, 5500);
+        };
+
+        // 2. هندسة الضغط على زر "الحسني"
+        teleBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // منع الانتقال الفوري
+            
+            // بدء تأثير السفر عبر الزمن
+            isWarping = true;
+            mainUI.style.opacity = '0'; // إخفاء الواجهة
+            mainUI.style.transform = 'scale(2)'; // تكبير الواجهة بقوة
+            
+            // زيادة السرعة تدريجياً
+            let warpInterval = setInterval(() => {
+                warpSpeed += 2;
+            }, 50);
+
+            // بعد ثانية ونصف، وميض أبيض ثم الانتقال
+            setTimeout(() => {
+                clearInterval(warpInterval);
+                warpFlash.style.opacity = '1'; // فلاش أبيض
+                
+                // الانتقال إلى حساب التليجرام الخاص بك
+                setTimeout(() => {
+                    window.location.href = "https://t.me/Om_G9";
+                }, 300);
+                
+            }, 1500);
         });
+
     </script>
 </body>
 </html>
