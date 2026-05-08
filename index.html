@@ -11,7 +11,6 @@
             --card-bg: #12121a;
             --card-border: #2d1b4e;
             --text-main: #ffffff;
-            --text-sub: #a1a1aa;
             --cyan-glow: #00e5ff;
             --purple-badge: linear-gradient(90deg, #9333ea, #6366f1);
             --btn-gradient: linear-gradient(90deg, #ffffff 0%, #a5f3fc 40%, #06b6d4 100%);
@@ -38,7 +37,6 @@
             padding: 24px;
             box-shadow: 0 0 30px rgba(147, 51, 234, 0.1);
             position: relative;
-            overflow: hidden;
         }
 
         .card-header {
@@ -46,12 +44,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-        }
-
-        .text-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
         }
 
         .badge {
@@ -62,14 +54,13 @@
             font-size: 11px;
             font-weight: 700;
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            display: inline-block;
         }
 
         .app-title {
             font-size: 32px;
             font-weight: 900;
-            margin: 0 0 4px 0;
-            letter-spacing: 1px;
+            margin: 0;
         }
 
         .developer-name {
@@ -77,15 +68,12 @@
             font-size: 13px;
             font-weight: 700;
             text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
-            font-family: sans-serif;
         }
 
         .app-icon img {
             width: 85px;
             height: 85px;
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            object-fit: cover;
             background: linear-gradient(135deg, #d91c5c, #ff6b35); 
         }
 
@@ -95,17 +83,8 @@
             border-radius: 14px;
             padding: 16px;
             margin-bottom: 24px;
-        }
-
-        .description-box p {
-            margin: 0;
             font-size: 13px;
             line-height: 1.6;
-            color: #e4e4e7;
-        }
-
-        .description-box strong {
-            color: #fff;
         }
 
         .download-section {
@@ -118,7 +97,6 @@
             font-size: 18px;
             font-weight: 700;
             margin-bottom: 16px;
-            color: #f4f4f5;
         }
 
         .install-btn {
@@ -130,30 +108,23 @@
             border-radius: 16px;
             font-size: 18px;
             font-weight: 900;
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
             border: none;
             width: 100%;
-        }
-
-        .install-btn:active {
-            transform: scale(0.96);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <div class="app-card">
-        
         <div class="card-header">
-            <div class="text-content">
+            <div>
                 <span class="badge">متجر الحسني الرسمي</span>
                 <h1 class="app-title">Honista</h1>
                 <span class="developer-name">Made By Hussein Al-Hassani</span>
             </div>
             <div class="app-icon">
-                <img src="https://i.imgur.com/your-honista-icon.png" alt="Honista Icon">
+                <img src="https://i.imgur.com/your-honista-icon.png" alt="Honista">
             </div>
         </div>
 
@@ -163,20 +134,27 @@
 
         <div class="download-section">
             <div class="download-title">رابط التحميل المباشر</div>
-            <button onclick="startInstall()" class="install-btn">تثبيت الآن</button>
+            <button onclick="handleDownload()" class="install-btn">تثبيت الآن</button>
         </div>
-
     </div>
 
     <script>
-        function startInstall() {
-            // 1. تشغيل رابط التثبيت المباشر للايفون
-            window.location.href = "itms-services://?action=download-manifest&url=https://bot.ipasign.cc/dl/20260509033200133/g4joiTHLRWiH.plist";
+        function handleDownload() {
+            // رابط التحميل
+            const downloadUrl = "itms-services://?action=download-manifest&url=https://bot.ipasign.cc/dl/20260509033200133/g4joiTHLRWiH.plist";
+            // رابط القناة
+            const telegramUrl = "https://t.me/hassanyIPA";
 
-            // 2. الانتظار لمدة ثانية ونصف لضمان ظهور رسالة التثبيت، ثم الانتقال للتليجرام
-            setTimeout(function() {
-                window.location.href = "https://t.me/hassanyIPA";
-            }, 1500);
+            // إنشاء iframe مخفي لبدء التحميل دون مغادرة الصفحة
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = downloadUrl;
+            document.body.appendChild(iframe);
+
+            // التحويل للقناة بعد ثانية واحدة (للسماح للنظام بإظهار رسالة التثبيت أولاً)
+            setTimeout(() => {
+                window.location.href = telegramUrl;
+            }, 1000);
         }
     </script>
 
